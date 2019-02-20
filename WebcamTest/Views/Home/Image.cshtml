@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Image";
+}
+
+<h2>Image</h2>
+
+@using (Html.BeginForm())
+{
+    <div id="wrapperDiv">
+    <video id="player" width="320" height="240" controls></video>
+    </div>
+    <button type="button" id="capture">Capture</button>
+    <canvas id="canvas" width=320 height=240></canvas>
+
+    <textarea name="img" id="img"></textarea>
+    <button type="submit" class="btn btn-success">Save</button>
+}
+
+<script>
+    const player = document.getElementById('player');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const captureButton = document.getElementById('capture');
+
+  const constraints = {
+    video: true
+  };
+
+  captureButton.addEventListener('click', () => {
+    // Draw the video frame to the canvas.
+      context.drawImage(player, 0, 0, canvas.width, canvas.height);
+      //player.srcObject.getVideoTracks().forEach(track => track.stop());
+      var dataURL = canvas.toDataURL();
+      console.log(dataURL);
+      $('#img').val(dataURL);
+  });
+
+  // Attach the video stream to the video element and autoplay.
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then((stream) => {
+      player.srcObject = stream;
+    });
+    </script>
